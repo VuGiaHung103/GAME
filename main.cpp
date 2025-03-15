@@ -4,23 +4,28 @@
 #include "enemy.h"
 
 int main(int argc, char* argv[]) {
-std::cout << "Program Started !!!";
+
 
    if (!initSDL()) {
     std::cout << "Failed to initialize SDL!" << std::endl;
 
     return 1;
 }
+SDL_Texture* g_background = nullptr;
+    g_background = IMG_LoadTexture(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\bin\\Debug\\background.png");
+if (g_background == nullptr) {
+    std::cout << "Failed to load background: " << IMG_GetError() << std::endl;
+}
 
 
-    Player player(g_screen, "player.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 50, 50);
+    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\bin\\Debug\\khongphut.PNG", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 150, 150);
     std::vector<Bullet> bullets;
     std::vector<Bullet> enemyBullets;
     std::vector<Enemy> enemies;
 
 
     for (int i = 0; i < 5; ++i) {
-        enemies.push_back(Enemy(g_screen, "enemy.png", i * 100, 50, 50, 50));
+        enemies.push_back(Enemy(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\bin\\Debug\\enemy.png", i * 100, 50, 70, 70));
     }
 
     bool running = true;
@@ -33,10 +38,15 @@ std::cout << "Program Started !!!";
             }
             player.handleEvent(g_event);
             if (g_event.type == SDL_KEYDOWN) {
-                if (g_event.key.keysym.sym == SDLK_SPACE) {
-                    bullets.push_back(Bullet(g_screen, "bullet.png", player.getRect().x + 20, player.getRect().y, 10, 20));
-                }
-            }
+    if (g_event.key.keysym.sym == SDLK_SPACE) {
+        int bulletX = player.getRect().x + player.getRect().w / 2 - 5;
+        int bulletY = player.getRect().y - 10;
+        bullets.push_back(Bullet(g_screen,
+                                 "D:\\gamestart_1\\game start 1\\Game_2\\bin\\Debug\\bullet.png",
+                                 bulletX, bulletY, 10, 20));
+    }
+}
+
         }
 
         player.move();
@@ -50,7 +60,7 @@ std::cout << "Program Started !!!";
         for (auto& enemy : enemies) {
             enemy.move();
             if (rand() % 100 < 2) { // Xác suất bắn đạn
-                enemy.shoot(g_screen, enemyBullets); // Truyền renderer vào đây
+                enemy.shoot(g_screen, enemyBullets);
             }
         }
 
@@ -104,7 +114,7 @@ std::cout << "Program Started !!!";
         // Vẽ lại màn hình
         SDL_SetRenderDrawColor(g_screen, 0, 0, 0, 255);
         SDL_RenderClear(g_screen);
-
+        SDL_RenderCopy(g_screen, g_background, NULL, NULL);
         player.render(g_screen);
 
         for (auto& bullet : bullets) {
@@ -115,9 +125,15 @@ std::cout << "Program Started !!!";
             bullet.render(g_screen);
         }
 
-        for (auto& enemy : enemies) {
-            enemy.render(g_screen);
+    for (auto& enemy : enemies) {
+    if (enemy.checkCollision(player.getRect())) {
+        player.takeDamage();
+        if (player.getHealth() <= 0) {
+            gameOver = true;
         }
+    }
+}
+
 
         SDL_RenderPresent(g_screen);
         SDL_Delay(16);
@@ -130,4 +146,3 @@ std::cout << "Program Started !!!";
     closeSDL();
     return 0;
 }
-

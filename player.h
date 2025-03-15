@@ -20,6 +20,6 @@ private:
     SDL_Texture* texture;
     SDL_Rect rect;
     int health;
-    bool moveLeft, moveRight;
+    bool moveLeft, moveRight, moveUp, moveDown;
 };
 #endif // PLAYER_H
