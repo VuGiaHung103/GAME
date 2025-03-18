@@ -12,20 +12,20 @@ int main(int argc, char* argv[]) {
     return 1;
 }
 SDL_Texture* g_background = nullptr;
-    g_background = IMG_LoadTexture(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\bin\\Debug\\background.png");
+    g_background = IMG_LoadTexture(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\background.png");
 if (g_background == nullptr) {
     std::cout << "Failed to load background: " << IMG_GetError() << std::endl;
 }
 
 
-    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\bin\\Debug\\khongphut.PNG", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 150, 150);
+    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.PNG", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 150, 150);
     std::vector<Bullet> bullets;
     std::vector<Bullet> enemyBullets;
     std::vector<Enemy> enemies;
 
 
     for (int i = 0; i < 5; ++i) {
-        enemies.push_back(Enemy(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\bin\\Debug\\enemy.png", i * 100, 50, 70, 70));
+        enemies.push_back(Enemy(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.PNG", i * 100, 50, 70, 70));
     }
 
     bool running = true;
@@ -41,9 +41,7 @@ if (g_background == nullptr) {
     if (g_event.key.keysym.sym == SDLK_SPACE) {
         int bulletX = player.getRect().x + player.getRect().w / 2 - 5;
         int bulletY = player.getRect().y - 10;
-        bullets.push_back(Bullet(g_screen,
-                                 "D:\\gamestart_1\\game start 1\\Game_2\\bin\\Debug\\bullet.png",
-                                 bulletX, bulletY, 10, 20));
+        bullets.push_back(Bullet(g_screen,"D:\\gamestart_1\\game start 1\\Game_2\\picture\\onebullet.PNG",bulletX, bulletY, 10, 20));
     }
 }
 
@@ -53,6 +51,8 @@ if (g_background == nullptr) {
 
         // Di chuyển Bullet
         for (auto& bullet : bullets) {
+
+            bullet.render(g_screen);
             bullet.move(0, -10);
         }
 
@@ -86,8 +86,9 @@ if (g_background == nullptr) {
     SDL_Rect bulletRect = bullet.getRect();
     SDL_Rect playerRect = player.getRect();
 
-    if (SDL_HasIntersection(&bulletRect, &playerRect)) { // Đã sửa lỗi
+    if (SDL_HasIntersection(&bulletRect, &playerRect)) {
         player.takeDamage();
+        std::cout << "va cham dan\n" ;
         bullet = enemyBullets.back();
         enemyBullets.pop_back();
         if (player.getHealth() <= 0) {
@@ -100,6 +101,7 @@ if (g_background == nullptr) {
         for (auto& enemy : enemies) {
             if (enemy.checkCollision(player.getRect())) {
                 player.takeDamage();
+                std::cout << "va cham enemy \n " ;
                 if (player.getHealth() <= 0) {
                     gameOver = true;
                 }
@@ -110,13 +112,20 @@ if (g_background == nullptr) {
         enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& enemy) {
             return enemy.isDestroyed();
         }), enemies.end());
+        // Xóa đạn của người chơi nếu ra khỏi màn hình
+        bullets.erase(std::remove_if(bullets.begin(), bullets.end(), [](const Bullet& b) {
+            return b.isOutOfScreen(SCREEN_HEIGHT);
+            }), bullets.end());
 
+        // Xóa đạn của kẻ địch nếu ra khỏi màn hình
+        enemyBullets.erase(std::remove_if(enemyBullets.begin(), enemyBullets.end(), [](const Bullet& b) {
+            return b.isOutOfScreen(SCREEN_HEIGHT);
+            }), enemyBullets.end());
         // Vẽ lại màn hình
-        SDL_SetRenderDrawColor(g_screen, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
         SDL_RenderClear(g_screen);
         SDL_RenderCopy(g_screen, g_background, NULL, NULL);
         player.render(g_screen);
-
         for (auto& bullet : bullets) {
             bullet.render(g_screen);
         }
@@ -133,7 +142,6 @@ if (g_background == nullptr) {
         }
     }
 }
-
 
         SDL_RenderPresent(g_screen);
         SDL_Delay(16);

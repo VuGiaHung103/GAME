@@ -4,7 +4,7 @@
 Player::Player(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h) {
     texture = IMG_LoadTexture(renderer, imagePath);
     rect = {x, y, w, h};
-    health = 100; // Người chơi có 6 máu
+    health = 70; // Người chơi có 70 máu
     moveLeft = false;
     moveRight = false;
     moveUp = false;

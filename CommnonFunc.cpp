@@ -5,6 +5,7 @@ SDL_Window* g_window = nullptr;
 SDL_Renderer* g_screen = nullptr;
 SDL_Event g_event;
 
+
 // Khởi tạo SDL
 bool initSDL() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
@@ -12,7 +13,7 @@ bool initSDL() {
         return false;
     }
 
-    g_window = SDL_CreateWindow("Shoot 'em Up", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    g_window = SDL_CreateWindow("Plane Battle!!!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (g_window == nullptr) {
         std::cout<< "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         return false;

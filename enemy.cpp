@@ -2,6 +2,9 @@
 
 Enemy::Enemy(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h) {
     texture = IMG_LoadTexture(renderer, imagePath);
+    if (!texture) {
+        std::cout << "Failed to load enemy texture: " << IMG_GetError() << std::endl;
+    }
     rect = {x, y, w, h};
     health = 2; // Enemy cần 2 viên đạn để bị tiêu diệt
     destroyed = false;
@@ -12,6 +15,7 @@ Enemy::~Enemy() {
 }
 
 void Enemy::render(SDL_Renderer* renderer) {
+
     if (!destroyed) {
         SDL_RenderCopy(renderer, texture, NULL, &rect);
     }
@@ -30,7 +34,7 @@ void Enemy::move() {
 
 void Enemy::shoot(SDL_Renderer* renderer, std::vector<Bullet>& enemyBullets) {
     if (!destroyed) {
-        enemyBullets.push_back(Bullet(renderer, "enemy_bullet.png", rect.x + rect.w / 2, rect.y + rect.h, 10, 20));
+        enemyBullets.push_back(Bullet(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemybullet.PNG", rect.x + rect.w / 2, rect.y + rect.h, 5, 10));
     }
 }
 

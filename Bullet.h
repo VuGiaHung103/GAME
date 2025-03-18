@@ -12,6 +12,7 @@ public:
     void render(SDL_Renderer* renderer);
     void move(int dx, int dy);
     SDL_Rect getRect() const;
+    bool isOutOfScreen(int screenHeight) const ;
 
 private:
     SDL_Texture* texture;
