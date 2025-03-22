@@ -18,14 +18,14 @@ if (g_background == nullptr) {
 }
 
 
-    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.PNG", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 150, 150);
+    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 150, 150);
     std::vector<Bullet> bullets;
     std::vector<Bullet> enemyBullets;
     std::vector<Enemy> enemies;
 
 
     for (int i = 0; i < 5; ++i) {
-        enemies.push_back(Enemy(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.PNG", i * 100, 50, 70, 70));
+        enemies.push_back(Enemy(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.png", i * 100, 50, 70, 70));
     }
 
     bool running = true;
@@ -41,7 +41,7 @@ if (g_background == nullptr) {
     if (g_event.key.keysym.sym == SDLK_SPACE) {
         int bulletX = player.getRect().x + player.getRect().w / 2 - 5;
         int bulletY = player.getRect().y - 10;
-        bullets.push_back(Bullet(g_screen,"D:\\gamestart_1\\game start 1\\Game_2\\picture\\onebullet.PNG",bulletX, bulletY, 10, 20));
+        bullets.push_back(Bullet(g_screen,"D:\\gamestart_1\\game start 1\\Game_2\\picture\\onebullet.png",bulletX, bulletY, 10, 20));
     }
 }
 
@@ -149,6 +149,10 @@ if (g_background == nullptr) {
 
     if (gameOver) {
         std::cout << "Game Over!" << std::endl;
+    }
+     if (g_background != nullptr) {
+        SDL_DestroyTexture(g_background);
+        g_background = nullptr;
     }
 
     closeSDL();

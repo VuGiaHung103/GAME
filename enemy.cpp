@@ -10,9 +10,6 @@ Enemy::Enemy(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w,
     destroyed = false;
 }
 
-Enemy::~Enemy() {
-    SDL_DestroyTexture(texture);
-}
 
 void Enemy::render(SDL_Renderer* renderer) {
 
@@ -34,7 +31,7 @@ void Enemy::move() {
 
 void Enemy::shoot(SDL_Renderer* renderer, std::vector<Bullet>& enemyBullets) {
     if (!destroyed) {
-        enemyBullets.push_back(Bullet(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemybullet.PNG", rect.x + rect.w / 2, rect.y + rect.h, 5, 10));
+        enemyBullets.push_back(Bullet(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemybullet.png", rect.x + rect.w / 2, rect.y + rect.h, 5, 10));
     }
 }
 

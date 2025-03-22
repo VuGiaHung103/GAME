@@ -6,7 +6,7 @@
 class Player {
 public:
     Player(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h);
-    ~Player();
+
 
     void render(SDL_Renderer* renderer);
     void handleEvent(SDL_Event& event);

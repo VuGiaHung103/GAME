@@ -19,9 +19,6 @@ Player::Player(SDL_Renderer* renderer, const char* imagePath, int x, int y, int 
 }
 
 
-Player::~Player() {
-    SDL_DestroyTexture(texture);
-}
 
 void Player::render(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, texture, NULL, &rect);
