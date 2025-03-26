@@ -18,14 +18,14 @@ if (g_background == nullptr) {
 }
 
 
-    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 150, 150);
+    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 185, 150);
     std::vector<Bullet> bullets;
     std::vector<Bullet> enemyBullets;
     std::vector<Enemy> enemies;
 
 
     for (int i = 0; i < 5; ++i) {
-        enemies.push_back(Enemy(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.png", i * 100, 50, 70, 70));
+        enemies.push_back(Enemy(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.png", i * 100, 50, 100, 70));
     }
 
     bool running = true;
@@ -58,6 +58,7 @@ if (g_background == nullptr) {
 
         // Di chuyển Enemy và bắn đạn
         for (auto& enemy : enemies) {
+
             enemy.move();
             if (rand() % 100 < 2) { // Xác suất bắn đạn
                 enemy.shoot(g_screen, enemyBullets);
@@ -129,19 +130,12 @@ if (g_background == nullptr) {
         for (auto& bullet : bullets) {
             bullet.render(g_screen);
         }
-
+        for (auto& enemy : enemies) {
+            enemy.render(g_screen);
+        }
         for (auto& bullet : enemyBullets) {
             bullet.render(g_screen);
         }
-
-    for (auto& enemy : enemies) {
-    if (enemy.checkCollision(player.getRect())) {
-        player.takeDamage();
-        if (player.getHealth() <= 0) {
-            gameOver = true;
-        }
-    }
-}
 
         SDL_RenderPresent(g_screen);
         SDL_Delay(16);
