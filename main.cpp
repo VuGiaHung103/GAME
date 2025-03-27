@@ -18,15 +18,13 @@ if (g_background == nullptr) {
 }
 
 
-    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 185, 150);
+    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 100, 70);
     std::vector<Bullet> bullets;
     std::vector<Bullet> enemyBullets;
     std::vector<Enemy> enemies;
 
 
-    for (int i = 0; i < 5; ++i) {
-        enemies.push_back(Enemy(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.png", i * 100, 50, 100, 70));
-    }
+
 
     bool running = true;
     bool gameOver = false;
@@ -48,18 +46,20 @@ if (g_background == nullptr) {
         }
 
         player.move();
+        Enemy::spawnWave(enemies, g_screen);
+
 
         // Di chuyển Bullet
         for (auto& bullet : bullets) {
 
             bullet.render(g_screen);
-            bullet.move(0, -10);
+            bullet.move(0, -7);
         }
 
         // Di chuyển Enemy và bắn đạn
         for (auto& enemy : enemies) {
 
-            enemy.move();
+           enemy.move(player.getRect());
             if (rand() % 100 < 2) { // Xác suất bắn đạn
                 enemy.shoot(g_screen, enemyBullets);
             }
@@ -67,7 +67,7 @@ if (g_background == nullptr) {
 
         // Di chuyển đạn của kẻ địch
         for (auto& bullet : enemyBullets) {
-            bullet.move(0, 5);
+            bullet.move(0, 3);
         }
 
         // Kiểm tra va chạm giữa đạn của người chơi và Enemy
@@ -89,7 +89,7 @@ if (g_background == nullptr) {
 
     if (SDL_HasIntersection(&bulletRect, &playerRect)) {
         player.takeDamage();
-        std::cout << "va cham dan\n" ;
+
         bullet = enemyBullets.back();
         enemyBullets.pop_back();
         if (player.getHealth() <= 0) {
@@ -98,16 +98,23 @@ if (g_background == nullptr) {
     }
 }
 
-        // Kiểm tra va chạm giữa người chơi và Enemy
-        for (auto& enemy : enemies) {
-            if (enemy.checkCollision(player.getRect())) {
-                player.takeDamage();
-                std::cout << "va cham enemy \n " ;
-                if (player.getHealth() <= 0) {
-                    gameOver = true;
-                }
-            }
+      for (auto enemyIt = enemies.begin(); enemyIt != enemies.end();) {
+    if (enemyIt->checkCollision(player.getRect())) {
+        player.takeDamage();
+
+        // Xóa enemy ngay lập tức sau khi va chạm
+        enemyIt = enemies.erase(enemyIt);
+
+        // Kiểm tra nếu Player hết máu, thoát vòng lặp ngay
+        if (player.getHealth() <= 0) {
+            gameOver = true;
+            break;
         }
+    } else {
+        ++enemyIt;  // Nếu không có va chạm, tiếp tục duyệt
+    }
+}
+
 
         // Xóa các Enemy đã bị tiêu diệt
         enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& enemy) {
