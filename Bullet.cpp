@@ -1,7 +1,7 @@
 
 #include "Bullet.h"
 
-Bullet::Bullet(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h) {
+Bullet::Bullet(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h, int dmg) : damage(dmg) {
     texture = IMG_LoadTexture(renderer, imagePath);
     if (!texture) {
         std::cout << "Failed to load bullet texture: " << IMG_GetError() << std::endl;

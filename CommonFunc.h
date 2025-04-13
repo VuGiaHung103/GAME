@@ -24,9 +24,11 @@ const int COLOR_KEY_B = 180;
 extern SDL_Window* g_window;       // Cửa sổ chính
 extern SDL_Renderer* g_screen;     // Renderer
 extern SDL_Event g_event;          // Sự kiện
+extern TTF_Font* g_font;           // Chữ
 
 // Khai báo các hàm
 bool initSDL();                    // Khởi tạo SDL
-void closeSDL();                   // Đóng SDL và giải phóng tài nguyên
-
+void closeSDL();                    // Đóng SDL và giải phóng tài nguyên
+void CloseFont();                   //đóng font
+bool InitFont();                    //Khởi tạo font
 #endif // COMMONFUNC_H_

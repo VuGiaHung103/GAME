@@ -19,11 +19,11 @@ Enemy::Enemy(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w,
 
     // Thiết lập tốc độ cố định
     if (isFast) {
-        speedX = 4; // Enemy đặc biệt có tốc độ gấp đôi
-        speedY = 4;
-    } else {
-        speedX = 2; // Enemy thường có tốc độ cố định
+        speedX = 2; // Enemy đặc biệt có tốc độ gấp đôi
         speedY = 2;
+    } else {
+        speedX = 1; // Enemy thường có tốc độ cố định
+        speedY = 1;
     }
 }
 
@@ -36,7 +36,7 @@ void Enemy::render(SDL_Renderer* renderer) {
 
 void Enemy::move(const SDL_Rect& playerRect) {
     if (destroyed) return;
-
+    updateHitbox();
     // Tính toán khoảng cách đến người chơi
     int deltaX = playerRect.x - rect.x;
     int deltaY = playerRect.y - rect.y;
@@ -66,6 +66,25 @@ void Enemy::move(const SDL_Rect& playerRect) {
         }
     }
 }
+void Enemy::updateHitbox() {
+    hitboxVertical.x = rect.x + rect.w * 0.3;
+    hitboxVertical.y = rect.y;
+    hitboxVertical.w = rect.w * 0.4;
+    hitboxVertical.h = rect.h;
+
+    hitboxHorizontal.x = rect.x;
+    hitboxHorizontal.y = rect.y + rect.h * 0.3;
+    hitboxHorizontal.w = rect.w;
+    hitboxHorizontal.h = rect.h * 0.4;
+}
+
+SDL_Rect Enemy::getHitboxVertical() const {
+    return hitboxVertical;
+}
+
+SDL_Rect Enemy::getHitboxHorizontal() const {
+    return hitboxHorizontal;
+}
 
 
 void Enemy::update(const SDL_Rect& playerRect) {
@@ -76,29 +95,28 @@ void Enemy::update(const SDL_Rect& playerRect) {
 
 void Enemy::shoot(SDL_Renderer* renderer, std::vector<Bullet>& enemyBullets) {
     if (!destroyed) {
-        enemyBullets.push_back(Bullet(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemybullet.png", rect.x + rect.w / 2, rect.y + rect.h, 30, 30));
+        enemyBullets.push_back(Bullet(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemybullet.png", rect.x + rect.w / 2, rect.y + rect.h, 30, 30, 1));
     }
 }
 
 
 bool Enemy::checkCollision(const SDL_Rect& otherRect) const {
-    if (destroyed) return false;
-    return SDL_HasIntersection(&rect, &otherRect);
+    return SDL_HasIntersection(&hitboxVertical, &otherRect) ||
+           SDL_HasIntersection(&hitboxHorizontal, &otherRect);
 }
 
 bool Enemy::isDestroyed() const {
     return destroyed;
 }
 
-void Enemy::takeDamage() {
-    health--;
-    if (health <= 0) {
-        destroyed = true;
-    }
+void Enemy::takeDamage(int amount) {
+    health -= amount;
+    if (health <= 0) destroyed = true;
 }
 
+
 void Enemy::spawnWave(std::vector<Enemy>& enemies, SDL_Renderer* renderer) {
-    static Uint32 lastWaveTime = 0;
+   static Uint32 lastWaveTime = SDL_GetTicks();
     Uint32 currentTime = SDL_GetTicks();
 
     if (currentTime - lastWaveTime > WAVE_INTERVAL) {

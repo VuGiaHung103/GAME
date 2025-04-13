@@ -4,7 +4,7 @@
 Player::Player(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h) {
     texture = IMG_LoadTexture(renderer, imagePath);
     rect = {x, y, w, h};
-    health = 70; // Người chơi có 70 máu
+    health = 1000; // Người chơi có 30 máu
     moveLeft = false;
     moveRight = false;
     moveUp = false;
@@ -16,6 +16,25 @@ Player::Player(SDL_Renderer* renderer, const char* imagePath, int x, int y, int 
     if (rect.y > SCREEN_HEIGHT - rect.h) rect.y = SCREEN_HEIGHT - rect.h;
 
 
+}
+void Player::updateHitbox() {
+    hitboxVertical.x = rect.x + rect.w * 0.3;
+    hitboxVertical.y = rect.y;
+    hitboxVertical.w = rect.w * 0.4;
+    hitboxVertical.h = rect.h;
+
+    hitboxHorizontal.x = rect.x;
+    hitboxHorizontal.y = rect.y +rect.h * 0.3;
+    hitboxHorizontal.w = rect.w;
+    hitboxHorizontal.h = rect.h * 0.4;
+}
+
+SDL_Rect Player::getHitboxVertical() const {
+    return hitboxVertical;
+}
+
+SDL_Rect Player::getHitboxHorizontal() const {
+    return hitboxHorizontal;
 }
 
 
@@ -57,5 +76,37 @@ SDL_Rect Player::getRect() const {
 
 int Player::getHealth() const {
     return health;
+}
+void Player::addEnergy(int amount) {
+    if (!usingSpecialBullet) {
+        energy += amount;
+        if (energy > maxEnergy) energy = maxEnergy;
+    }
+}
+
+void Player::activateSpecialBullet() {
+    if (!usingSpecialBullet && energy >= maxEnergy) {
+        usingSpecialBullet = true;
+        specialStartTime = SDL_GetTicks();
+    }
+}
+
+void Player::updateSpecialState() {
+    if (usingSpecialBullet) {
+        Uint32 elapsed = SDL_GetTicks() - specialStartTime;
+        energy = maxEnergy - (elapsed * maxEnergy / 10000); // giảm dần trong 10s
+        if (energy <= 0 || elapsed >= 10000) {
+            energy = 0;
+            usingSpecialBullet = false;
+        }
+    }
+}
+
+bool Player::isUsingSpecialBullet() const {
+    return usingSpecialBullet;
+}
+
+int Player::getEnergy() const {
+    return energy;
 }
 

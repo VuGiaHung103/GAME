@@ -38,9 +38,13 @@
 		<Unit filename="Bullet.h" />
 		<Unit filename="CommnonFunc.cpp" />
 		<Unit filename="CommonFunc.h" />
+		<Unit filename="boss.cpp" />
+		<Unit filename="boss.h" />
+		<Unit filename="button.h" />
 		<Unit filename="enemy.cpp" />
 		<Unit filename="enemy.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="menu.cpp" />
 		<Unit filename="player.cpp" />
 		<Unit filename="player.h" />
 		<Extensions>

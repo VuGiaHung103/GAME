@@ -4,7 +4,7 @@
 SDL_Window* g_window = nullptr;
 SDL_Renderer* g_screen = nullptr;
 SDL_Event g_event;
-
+TTF_Font* g_font = nullptr;
 
 // Khởi tạo SDL
 bool initSDL() {
@@ -24,21 +24,32 @@ bool initSDL() {
         std::cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         return false;
     }
-
+   return true;
+}
+bool InitFont() {
     if (TTF_Init() == -1) {
-        std::cout << "TTF could not initialize! TTF_Error: " << TTF_GetError() << std::endl;
+        std::cout << "TTF_Init failed: " << TTF_GetError() << std::endl;
         return false;
     }
 
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        std::cout << "SDL_mixer could not initialize! Mix_Error: " << Mix_GetError() << std::endl;
+    g_font = TTF_OpenFont("D:\\gamestart_1\\game start 1\\Game_2\\font\\arial.ttf", 24);
+    if (!g_font) {
+        std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
         return false;
     }
 
     return true;
 }
 
+
+
 // Đóng SDL và giải phóng tài nguyên
+ void CloseFont() {
+    if (g_font != nullptr) {
+        TTF_CloseFont(g_font);
+        g_font = nullptr;
+    }
+    }
 void closeSDL() {
     if (g_screen != nullptr) {
         SDL_DestroyRenderer(g_screen);
@@ -51,6 +62,6 @@ void closeSDL() {
     }
 
     Mix_CloseAudio();
-    TTF_Quit();
+
     SDL_Quit();
 }
