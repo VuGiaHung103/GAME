@@ -15,6 +15,8 @@ public:
     void move();
     SDL_Rect getRect() const;
     int getHealth() const;
+    int getMaxHealth() const { return 60; }
+
     void updateHitbox();
     SDL_Rect getHitboxVertical() const;
     SDL_Rect getHitboxHorizontal() const;

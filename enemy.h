@@ -10,7 +10,7 @@
 
 class Enemy {
 public:
-    Enemy(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h,bool fast);
+    Enemy(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h, bool fast);
     void render(SDL_Renderer* renderer);
     void move(const SDL_Rect& playerRect);
 

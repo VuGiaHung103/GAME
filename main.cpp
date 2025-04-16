@@ -7,9 +7,7 @@
 
     // biến cục bộ
     int waveCount = 0;
-    bool waitingNextWave = false;
-    Uint32 waveStartTime = 0;
-    const Uint32 WAVE_DELAY = 3000;
+    bool waveReady = true;
 int main(int argc, char* argv[]) {
 
 enum GameState {
@@ -19,11 +17,7 @@ enum GameState {
 };
 
 
-   if (!initSDL()) {
-    std::cout << "Failed to initialize SDL!" << std::endl;
 
-    return 1;
-}
 if (!initSDL() || !InitFont()) {
     std::cout << "Failed to initialize SDL or font!" << std::endl;
     return 1;
@@ -39,6 +33,14 @@ if (!initSDL() || !InitFont()) {
    GameState currentState = STATE_MENU;
 
    while (currentState != STATE_EXIT) {
+    while (SDL_PollEvent(&g_event)) {
+            if (g_event.type == SDL_QUIT ) {
+                menu.Free();
+                CloseFont();
+                closeSDL();
+                return 0;
+            }
+        }
        if (currentState == STATE_MENU) {
            int choice = menu.ShowMenu();
            if (choice == 1) {
@@ -58,25 +60,37 @@ if (g_background == nullptr) {
 
 
     Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 100, 70);
+
     std::vector<Bullet> bullets;
     std::vector<Bullet> enemyBullets;
     std::vector<Bullet> bossBullets;
     std::vector<Enemy> enemies;
     std::vector<Boss> bosses;
-    Enemy::spawnWave(enemies, g_screen);
-    waveCount = 1;
-    waitingNextWave = false;
 
+    waveCount = 0;
+    waveReady = true;
 
     bool running = true;
     bool gameOver = false;
 
     while (running && !gameOver) {
         while (SDL_PollEvent(&g_event)) {
-            if (g_event.type == SDL_QUIT) {
-                running = false;
+
+            if (g_event.type == SDL_QUIT ) {
+                menu.Free();
+                CloseFont();
+                closeSDL();
                 return 0;
             }
+        if (player.getHealth() <= 0) {
+                    gameOver = true;
+                    std::cout << "Game Over!" << std::endl;
+                    menu.Free();
+                CloseFont();
+                closeSDL();
+                return 0;
+
+                }
             player.handleEvent(g_event);
             if (g_event.type == SDL_KEYDOWN) {
                     if (g_event.type == SDL_KEYDOWN) {
@@ -86,6 +100,9 @@ if (g_background == nullptr) {
         currentState = STATE_MENU;
     }
 }
+if (currentState != STATE_PLAYING) {
+        break;
+    }
 
     if (g_event.key.keysym.sym == SDLK_SPACE) {
     int bulletX = player.getRect().x + player.getRect().w / 2 - 10;
@@ -164,9 +181,7 @@ for (auto& boss : bosses) {
 
         bullet = enemyBullets.back();
         enemyBullets.pop_back();
-        if (player.getHealth() <= 0) {
-            gameOver = true;
-        }
+
     }
 }for (auto& bullet : bullets) {
     SDL_Rect bulletRect = bullet.getRect();
@@ -202,11 +217,7 @@ if (SDL_HasIntersection(&playerHitboxV, &enemyHitboxV) ||
         enemyIt = enemies.erase(enemyIt);
 
         // Kiểm tra nếu Player hết máu, thoát vòng lặp ngay
-        if (player.getHealth() <= 0) {
-            gameOver = true;
-            std::cout << "Game Over!" << std::endl;
-            break;
-        }
+
     } else {
         ++enemyIt;  // Nếu không có va chạm, tiếp tục duyệt
     }
@@ -233,16 +244,24 @@ for (auto it = bosses.begin(); it != bosses.end();) {
         enemyBullets.erase(std::remove_if(enemyBullets.begin(), enemyBullets.end(), [](const Bullet& b) {
             return b.isOutOfScreen(SCREEN_HEIGHT);
             }), enemyBullets.end());
-            // Nếu không còn enemy và boss -> bắt đầu đếm thời gian chuẩn bị wave mới
-        if (!waitingNextWave && enemies.empty() && bosses.empty()) {
-    waitingNextWave = true;
-    waveStartTime = SDL_GetTicks();
-}
 
-if (waitingNextWave && SDL_GetTicks() - waveStartTime >= WAVE_DELAY) {
-    waveCount++;  // Lần đầu tiên là wave 1
-    waitingNextWave = false;
-    //spawn boss
+
+            // Nếu không còn enemy và boss -> bắt đầu đếm thời gian chuẩn bị wave mới
+       if (enemies.empty() && bosses.empty() && waveReady) {
+    waveCount++;
+    waveReady = false;
+  if (waveCount == 1 && enemies.empty()) {
+    Enemy enemy1(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.png", 200, 100, 60, 60, 0);
+    Enemy enemy2(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.png", 900, 150, 60, 60, 0);
+    enemies.push_back(enemy1);
+    enemies.push_back(enemy2);
+}
+    // Tạo wave enemy mới nếu không phải wave có boss
+    if (waveCount != 3 && waveCount != 6 && waveCount != 8 && waveCount != 11) {
+        Enemy::spawnWave(enemies, g_screen);
+    }
+
+    // Tạo boss nếu đến wave có boss
     if (waveCount == 3 || waveCount == 6 || waveCount == 8) {
         std::string bossImg;
         if (waveCount == 3) bossImg = "D:\\gamestart_1\\game start 1\\Game_2\\picture\\boss_1.png";
@@ -252,13 +271,8 @@ if (waitingNextWave && SDL_GetTicks() - waveStartTime >= WAVE_DELAY) {
         Boss newBoss(g_screen, bossImg, SCREEN_WIDTH / 2 - 100, 60, 200, 150);
         bosses.push_back(newBoss);
     }
-     else {
-        Enemy::spawnWave(enemies, g_screen);
-    }
+
 }
-
-
-
         // Vẽ lại màn hình
         SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
         SDL_RenderClear(g_screen);
@@ -290,18 +304,45 @@ if (waitingNextWave && SDL_GetTicks() - waveStartTime >= WAVE_DELAY) {
         for (auto& boss : bosses) {
             boss.render(g_screen);
         }
+        waveReady = true;
+        //Thanh năng lượng
         SDL_Rect bg = { 20, 20, 240, 20 };
-SDL_Rect bar = { 20, 20, player.getEnergy() * 4, 20 };
+        SDL_Rect bar = { 20, 20, player.getEnergy() * 4, 20 };
 
-SDL_SetRenderDrawColor(g_screen, 100, 100, 100, 255); // khung nền
-SDL_RenderFillRect(g_screen, &bg);
+        SDL_SetRenderDrawColor(g_screen, 100, 100, 100, 255); // khung nền
+        SDL_RenderFillRect(g_screen, &bg);
 
-if (player.isUsingSpecialBullet())
-    SDL_SetRenderDrawColor(g_screen, 255, 100, 0, 255); // cam
-else
-    SDL_SetRenderDrawColor(g_screen, 0, 255, 0, 255);   // xanh
+        if (player.isUsingSpecialBullet()){
+            SDL_SetRenderDrawColor(g_screen, 255, 100, 0, 255);} // cam
+        else{
+            SDL_SetRenderDrawColor(g_screen, 0, 255, 0, 255); }  // xanh
+             SDL_RenderFillRect(g_screen, &bar);
 
-SDL_RenderFillRect(g_screen, &bar);
+        // Vẽ thanh máu
+        int hpBarWidth = 240;
+        int hpBarHeight = 20;
+        int hpBarX = 60;
+        int hpBarY = 50;
+
+        SDL_Rect hpOutline = { hpBarX, hpBarY, hpBarWidth, hpBarHeight };
+
+        // Vẽ viền nền (xám)
+        SDL_SetRenderDrawColor(g_screen, 100, 100, 100, 255);
+        SDL_RenderFillRect(g_screen, &hpOutline);
+
+        // Vẽ phần máu còn lại (đỏ)
+        int currentHP = player.getHealth();
+        int maxHP = player.getMaxHealth();
+        int hpWidth = (hpBarWidth * currentHP) / maxHP;
+
+        SDL_Rect hpFill = { hpBarX, hpBarY, hpWidth, hpBarHeight };
+        SDL_SetRenderDrawColor(g_screen, 255, 0, 0, 255);  // đỏ
+        SDL_RenderFillRect(g_screen, &hpFill);
+
+        // Viền trắng bên ngoài
+        SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
+        SDL_RenderDrawRect(g_screen, &hpOutline);
+
 
         SDL_RenderPresent(g_screen);
         SDL_Delay(16);
@@ -312,6 +353,7 @@ SDL_RenderFillRect(g_screen, &bar);
         g_background = nullptr;
     }
        }
+
  }
     menu.Free();
 
