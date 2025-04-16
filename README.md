@@ -6,4 +6,4 @@ gamesdl2
 17/03 thêm cơ chế wave 
 30/03 thêm cơ chế boss
 13/04 thêm cơ chế dừng game chuyển về menu, năng lượng, đạn đặc biệt ,thêm 2 con boss và cơ chế đạn của boss
-
+16/04 chỉnh sửa hitbox, chỉnh sửa cơ chế máu, đạn, và điểm rơi kẻ địch. Thêm thanh máu player
