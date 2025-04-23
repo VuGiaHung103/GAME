@@ -385,30 +385,34 @@ for (auto it = bosses.begin(); it != bosses.end();) {
             SDL_SetRenderDrawColor(g_screen, 0, 255, 0, 255); }  // xanh
              SDL_RenderFillRect(g_screen, &bar);
 
-        // Vẽ thanh máu
+        // --- VẼ THANH MÁU ---
         int hpBarWidth = 240;
         int hpBarHeight = 20;
-        int hpBarX = 60;
-        int hpBarY = 50;
 
+        // Vị trí: bên dưới thanh năng lượng
+        int hpBarX = 20;
+        int hpBarY = 20 + 20 + 10;
+
+        // Viền tổng thể
         SDL_Rect hpOutline = { hpBarX, hpBarY, hpBarWidth, hpBarHeight };
 
-        // Vẽ viền nền (xám)
+        // Nền xám
         SDL_SetRenderDrawColor(g_screen, 100, 100, 100, 255);
         SDL_RenderFillRect(g_screen, &hpOutline);
 
-        // Vẽ phần máu còn lại (đỏ)
-        int currentHP = player.getHealth();
-        int maxHP = player.getMaxHealth();
-        int hpWidth = (hpBarWidth * currentHP) / maxHP;
+        // Phần máu còn lại
+        int currentHP = std::max(0, player.getHealth());
+        int maxHP = std::max(1, player.getMaxHealth());
+        int hpWidth = std::max(0, (hpBarWidth * currentHP) / maxHP);
 
         SDL_Rect hpFill = { hpBarX, hpBarY, hpWidth, hpBarHeight };
-        SDL_SetRenderDrawColor(g_screen, 255, 0, 0, 255);  // đỏ
+        SDL_SetRenderDrawColor(g_screen, 255, 0, 0, 255); // đỏ
         SDL_RenderFillRect(g_screen, &hpFill);
 
-        // Viền trắng bên ngoài
+        // Viền trắng
         SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
         SDL_RenderDrawRect(g_screen, &hpOutline);
+
 
 
         SDL_RenderPresent(g_screen);
