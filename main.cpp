@@ -4,6 +4,60 @@
 #include "enemy.h"
 #include "button.h"
 #include"boss.h"
+enum EndGameType {
+    GAME_OVER,
+    GAME_WIN
+};
+
+bool ShowEndGameScreen(SDL_Renderer* renderer, EndGameType type) {
+    SDL_Texture* end_texture = nullptr;
+    if (type == GAME_OVER) {
+        end_texture = IMG_LoadTexture(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\Game_over.png");
+    } else {
+        end_texture = IMG_LoadTexture(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\you_win.png");
+    }
+
+    if (!end_texture) {
+        std::cout << "Failed to load end game image!\n";
+        return false;
+    }
+
+    Button yes_button, no_button;
+    yes_button.LoadButton(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\yes.png", 440, 650, 125, 60);
+    no_button.LoadButton(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\no.png", 690, 650, 125, 60);
+
+    SDL_Event e;
+    while (true) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                return false;
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN) {
+                int x = e.button.x;
+                int y = e.button.y;
+
+                if (yes_button.IsClicked(x, y)) {
+                    yes_button.Free();
+                    no_button.Free();
+                    SDL_DestroyTexture(end_texture);
+                    return true;
+                }
+                if (no_button.IsClicked(x, y)) {
+                    yes_button.Free();
+                    no_button.Free();
+                    SDL_DestroyTexture(end_texture);
+                    return false;
+                }
+            }
+        }
+
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, end_texture, nullptr, nullptr);
+        yes_button.Render();
+        no_button.Render();
+        SDL_RenderPresent(renderer);
+    }
+}
 
     // biến cục bộ
     int waveCount = 0;
@@ -82,15 +136,17 @@ if (g_background == nullptr) {
                 closeSDL();
                 return 0;
             }
-        if (player.getHealth() <= 0) {
-                    gameOver = true;
-                    std::cout << "Game Over!" << std::endl;
-                    menu.Free();
-                CloseFont();
-                closeSDL();
-                return 0;
+       if (player.getHealth() <= 0) {
+    bool replay = ShowEndGameScreen(g_screen, GAME_OVER);
+    if (replay) {
+        currentState = STATE_PLAYING;
+    } else {
+        currentState = STATE_MENU;
+    }
+    running = false;
+    break;
+}
 
-                }
             player.handleEvent(g_event);
             if (g_event.type == SDL_KEYDOWN) {
                     if (g_event.type == SDL_KEYDOWN) {
@@ -250,6 +306,17 @@ for (auto it = bosses.begin(); it != bosses.end();) {
        if (enemies.empty() && bosses.empty() && waveReady) {
     waveCount++;
     waveReady = false;
+    if (waveCount >= 8 && bosses.empty()) { // wave cuối có boss
+    bool replay = ShowEndGameScreen(g_screen, GAME_WIN);
+    if (replay) {
+        currentState = STATE_PLAYING;
+    } else {
+        currentState = STATE_MENU;
+    }
+    running = false;
+    break;
+}
+
   if (waveCount == 1 && enemies.empty()) {
     Enemy enemy1(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.png", 200, 100, 60, 60, 0);
     Enemy enemy2(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemy.png", 900, 150, 60, 60, 0);
