@@ -66,7 +66,7 @@ Game lấy cảm hứng từ thể loại "bắn gà" cổ điển, với các y
 - **Bắn đạn:** Phím **SPACE**.  
 - **Sử dụng đạn đặc biệt:** Phím **1**.  
 - **Restart / Quay về menu:** Phím **P**.  
-
+ **video demo và giới thiệu ngắn về game **("https://drive.google.com/file/d/1kJi6incLzUISuAULorneqVIAJIvq4hFD/view?usp=sharing")
 ---
 
 
