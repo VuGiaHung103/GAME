@@ -306,7 +306,7 @@ for (auto it = bosses.begin(); it != bosses.end();) {
        if (enemies.empty() && bosses.empty() && waveReady) {
     waveCount++;
     waveReady = false;
-    if (waveCount >= 8 && bosses.empty()) { // wave cuối có boss
+    if (waveCount > 8 && bosses.empty()) {
     bool replay = ShowEndGameScreen(g_screen, GAME_WIN);
     if (replay) {
         currentState = STATE_PLAYING;
