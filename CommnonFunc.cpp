@@ -61,7 +61,7 @@ void closeSDL() {
         g_window = nullptr;
     }
 
-    Mix_CloseAudio();
+
 
     SDL_Quit();
 }

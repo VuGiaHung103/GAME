@@ -95,7 +95,7 @@ void Enemy::update(const SDL_Rect& playerRect) {
 
 void Enemy::shoot(SDL_Renderer* renderer, std::vector<Bullet>& enemyBullets) {
     if (!destroyed) {
-        enemyBullets.push_back(Bullet(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemybullet.png", rect.x + rect.w / 2, rect.y + rect.h, 30, 30, 1));
+        enemyBullets.push_back(Bullet(renderer, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\enemybullet.png", rect.x + rect.w / 2, rect.y + rect.h, 50, 40, 1));
     }
 }
 

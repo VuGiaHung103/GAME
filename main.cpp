@@ -113,7 +113,7 @@ if (g_background == nullptr) {
 }
 
 
-    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 100, 70);
+    Player player(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\khongphut.png", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, 96, 80);
 
     std::vector<Bullet> bullets;
     std::vector<Bullet> enemyBullets;
@@ -164,9 +164,9 @@ if (currentState != STATE_PLAYING) {
     int bulletX = player.getRect().x + player.getRect().w / 2 - 10;
     int bulletY = player.getRect().y - 20;
     if (player.isUsingSpecialBullet()) {
-        bullets.push_back(Bullet(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\triple_bullet.png", bulletX, bulletY, 30, 50, 3));
+        bullets.push_back(Bullet(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\triple_bullet.png", bulletX, bulletY, 40, 50, 3));
     } else {
-        bullets.push_back(Bullet(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\onebullet.png", bulletX, bulletY, 10, 20, 1));
+        bullets.push_back(Bullet(g_screen, "D:\\gamestart_1\\game start 1\\Game_2\\picture\\onebullet.png", bulletX, bulletY, 20, 25, 1));
     }
 }
 
@@ -248,9 +248,9 @@ for (auto& boss : bosses) {
         if (SDL_HasIntersection(&bulletRect, &bossRect)) {
             boss.takeDamage(bullet.getDamage());
             player.addEnergy(10);
-            bullet = bullets.back();  // Gán viên đạn cuối
-            bullets.pop_back();       // Xóa viên đạn đã bắn
-            break;                    // Thoát vòng for boss để tránh trùng va chạm
+            bullet = bullets.back();
+            bullets.pop_back();
+            break;
         }
     }
 }
@@ -273,11 +273,40 @@ if (SDL_HasIntersection(&playerHitboxV, &enemyHitboxV) ||
         enemyIt = enemies.erase(enemyIt);
 
         // Kiểm tra nếu Player hết máu, thoát vòng lặp ngay
-
+        if (player.getHealth() <= 0) {
+            bool replay = ShowEndGameScreen(g_screen, GAME_OVER);
+            currentState = replay ? STATE_PLAYING : STATE_MENU;
+            running = false;
+            break;
+        }
     } else {
         ++enemyIt;  // Nếu không có va chạm, tiếp tục duyệt
     }
 }
+// Kiểm tra va chạm giữa người chơi và boss
+for (auto bossIt = bosses.begin(); bossIt != bosses.end();) {
+    SDL_Rect bossRect = bossIt->getRect();
+    SDL_Rect playerHitboxV = player.getHitboxVertical();
+    SDL_Rect playerHitboxH = player.getHitboxHorizontal();
+
+    if (SDL_HasIntersection(&playerHitboxV, &bossRect) ||
+        SDL_HasIntersection(&playerHitboxH, &bossRect)) {
+
+        player.takeDamage();
+
+
+        // Kiểm tra nếu người chơi chết
+        if (player.getHealth() <= 0) {
+            bool replay = ShowEndGameScreen(g_screen, GAME_OVER);
+            currentState = replay ? STATE_PLAYING : STATE_MENU;
+            running = false;
+            break;
+        }
+    }
+
+    ++bossIt;  // Nếu không va chạm hoặc vẫn tiếp tục
+}
+
 
 for (auto it = bosses.begin(); it != bosses.end();) {
     if (it->isDestroyed()) {
@@ -323,11 +352,6 @@ for (auto it = bosses.begin(); it != bosses.end();) {
     enemies.push_back(enemy1);
     enemies.push_back(enemy2);
 }
-    // Tạo wave enemy mới nếu không phải wave có boss
-    if (waveCount != 3 && waveCount != 6 && waveCount != 8 && waveCount != 11) {
-        Enemy::spawnWave(enemies, g_screen);
-    }
-
     // Tạo boss nếu đến wave có boss
     if (waveCount == 3 || waveCount == 6 || waveCount == 8) {
         std::string bossImg;
@@ -337,8 +361,10 @@ for (auto it = bosses.begin(); it != bosses.end();) {
 
         Boss newBoss(g_screen, bossImg, SCREEN_WIDTH / 2 - 100, 60, 200, 150);
         bosses.push_back(newBoss);
+    }else{
+    Enemy::spawnWave(enemies, g_screen);
     }
-
+    waveReady = true;
 }
         // Vẽ lại màn hình
         SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);

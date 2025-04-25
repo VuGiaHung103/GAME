@@ -16,6 +16,9 @@
 				</Compiler>
 				<Linker>
 					<Add library="setupapi" />
+					<Add library="SDL2" />
+					<Add library="SDL2main" />
+					<Add library="SDL2_image" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -33,7 +36,16 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="C:/SDL2/include" />
+			<Add directory="C:/Users/loq/Downloads/SDL2_image-devel-2.6.3-mingw/SDL2_image-2.6.3/x86_64-w64-mingw32/include" />
+			<Add directory="C:/Users/loq/Downloads/SDL2_ttf-devel-2.20.2-mingw/SDL2_ttf-2.20.2/x86_64-w64-mingw32/include" />
 		</Compiler>
+		<Linker>
+			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lstdc++" />
+			<Add directory="C:/SDL2/lib" />
+			<Add directory="C:/Users/loq/Downloads/SDL2_image-devel-2.6.3-mingw/SDL2_image-2.6.3/x86_64-w64-mingw32/lib" />
+			<Add directory="C:/Users/loq/Downloads/SDL2_ttf-devel-2.20.2-mingw/SDL2_ttf-2.20.2/x86_64-w64-mingw32/lib" />
+		</Linker>
 		<Unit filename="Bullet.cpp" />
 		<Unit filename="Bullet.h" />
 		<Unit filename="CommnonFunc.cpp" />

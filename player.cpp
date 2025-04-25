@@ -4,7 +4,7 @@
 Player::Player(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h) {
     texture = IMG_LoadTexture(renderer, imagePath);
     rect = {x, y, w, h};
-    health = 60; // Người chơi có 30 máu
+    health = 60; // Người chơi có 60 máu
     moveLeft = false;
     moveRight = false;
     moveUp = false;
@@ -65,7 +65,7 @@ void Player::move() {
     if (moveDown && rect.y < SCREEN_HEIGHT - rect.h) rect.y += 10;
 }
 void Player::takeDamage() {
-    health--;
+    health -= 2;
     if (health < 0) health = 0;
 }
 

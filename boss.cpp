@@ -1,4 +1,4 @@
-
+#include"CommonFunc.h"
 #include "Boss.h"
 
 Boss::Boss(SDL_Renderer* renderer, const std::string& path, int x, int y, int w, int h) {
