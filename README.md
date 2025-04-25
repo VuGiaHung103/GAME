@@ -1,6 +1,3 @@
-Dưới đây là phiên bản đã được chỉnh sửa để trông chuyên nghiệp hơn, với các ý được tách rõ và đánh dấu đầu dòng:
-
----
 
 # **GAME DEVELOPMENT DOCUMENTATION**  
 **Project Name:** gamesdl2  
@@ -72,4 +69,4 @@ Game lấy cảm hứng từ thể loại "bắn gà" cổ điển, với các y
 
 ---
 
-Phiên bản này giúp tài liệu trở nên rõ ràng, dễ theo dõi và chuyên nghiệp hơn. Bạn có muốn điều chỉnh thêm phần nào không?
+
