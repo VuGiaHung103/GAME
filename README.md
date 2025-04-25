@@ -1,21 +1,88 @@
-# GAME
-gamesdl2
-I.Tiến trình làm game
-23/02 tìm hiểu chung về SDL2 và cách làm game, cài đặt và sửa SDl
-24/02 lên ý tưởng và làm cơ bản về game, viết header.
-27/02 làm phần di chuyển, tìm đồ họa và tự thiết kế đồ họa
-2/03 cập nhật menu
-7/03 thêm cơ chế tracking player
-12/03 thêm cơ chế quái đột biến
-17/03 thêm cơ chế wave 
-30/03 thêm cơ chế boss
-13/04 thêm cơ chế dừng game chuyển về menu, năng lượng, đạn đặc biệt ,thêm 2 con boss và cơ chế đạn của boss
-16/04 chỉnh sửa hitbox, chỉnh sửa cơ chế máu, đạn, và điểm rơi kẻ địch. Thêm thanh máu player
-23/04 làm nốt phần kết game và game over, chỉnh sửa code thêm hợp lý và tránh bug
-24/04 làm thêm phần replay khi game over
-II. Giới thiệu về game
-Game lấy ý tưởng từ game bắn gà ngày xưa, với cơ chế di chuyển , né đạn và tiêu diệt mục tiêu, có cái đợt xuất hiện, mỗi 1 lần chơi là 1 trải nghiệm khác nhau vì cơ chế spawn quái là ngẫu nhiên và tùy thuộc mỗi lần chơi
-Di chuyển : bằng tổ hợp phím mũi tên
-Bắn đạn : nút SPACE
-Sử dụng đạn năng lượng cao : phím 1
-Restart lại từ đầu, quay về menu: phím P
+GAME DEVELOPMENT DOCUMENTATION
+Project Name: gamesdl2
+
+I. DEVELOPMENT TIMELINE
+Quá trình phát triển game được thực hiện theo các mốc thời gian sau:
+
+23/02:
+
+Tìm hiểu về SDL2 và quy trình phát triển game.
+
+Cài đặt và cấu hình SDL2.
+
+24/02:
+
+Lên ý tưởng game.
+
+Xây dựng cơ bản cấu trúc game.
+
+Viết file header.
+
+27/02:
+
+Triển khai cơ chế di chuyển nhân vật.
+
+Tìm kiếm và thiết kế đồ họa cho game.
+
+02/03:
+
+Phát triển menu game.
+
+07/03:
+
+Thêm cơ chế theo dõi người chơi (player tracking).
+
+12/03:
+
+Triển khai cơ chế "quái đột biến".
+
+17/03:
+
+Thêm cơ chế wave (đợt quái).
+
+30/03:
+
+Triển khai cơ chế boss.
+
+13/04:
+
+Thêm tính năng dừng game và quay về menu.
+
+Bổ sung hệ thống năng lượng và đạn đặc biệt.
+
+Thêm 2 boss mới và cơ chế đạn của boss.
+
+16/04:
+
+Chỉnh sửa hitbox.
+
+Cân bằng lại cơ chế máu, đạn và điểm rơi của kẻ địch.
+
+Thêm thanh máu cho người chơi.
+
+23/04:
+
+Hoàn thiện phần kết thúc game (game over).
+
+Tối ưu code để tránh bug và nâng cao hiệu suất.
+
+24/04:
+
+Thêm tính năng replay sau khi game over.
+
+II. GAME INTRODUCTION
+Concept & Gameplay
+Game lấy cảm hứng từ thể loại "bắn gà" cổ điển, với các yếu tố:
+
+Di chuyển & né đạn – Người chơi điều khiển nhân vật để tránh đạn và tiêu diệt kẻ địch.
+
+Hệ thống wave ngẫu nhiên – Mỗi lần chơi là một trải nghiệm khác nhau do cơ chế spawn quái được thiết kế ngẫu nhiên.
+
+Controls
+Di chuyển: Phím mũi tên (↑ ↓ ← →).
+
+Bắn đạn: Phím SPACE.
+
+Sử dụng đạn đặc biệt: Phím 1.
+
+Restart / Quay về menu: Phím P.
